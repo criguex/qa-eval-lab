@@ -47,14 +47,14 @@ Most test suites verify **deterministic** software. AI features are different: t
 
 ```mermaid
 flowchart LR
-    A([Push / Pull Request]) --> B[Playwright<br/>UI &amp; E2E]
-    A --> C[DeepEval<br/>LLM-as-judge metrics]
-    A --> D[Promptfoo<br/>model compare + red-team]
-    B --> E{Score &ge; threshold?}
+    A([Push / Pull Request]) --> B["Playwright<br/>UI and E2E"]
+    A --> C["DeepEval<br/>LLM-as-judge metrics"]
+    A --> D["Promptfoo<br/>model compare + red-team"]
+    B --> E{"Score above threshold?"}
     C --> E
     D --> E
-    E -- yes --> F([✅ Merge allowed])
-    E -- no  --> G([❌ Pipeline fails · merge blocked])
+    E -- yes --> F(["Merge allowed"])
+    E -- no --> G(["Pipeline fails - merge blocked"])
 ```
 
 The gate is the point: **a model update that starts hallucinating or drifting fails CI before it ever reaches a user.**
