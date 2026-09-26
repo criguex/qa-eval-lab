@@ -43,3 +43,13 @@ npx promptfoo@latest redteam run   # seguridad
 4. Publícalo en GitHub + escribe 1 post del proceso. Eso = inbound.
 
 _Sin rastro de empleadores/clientes: es material propio (marca GWAR)._
+
+## Módulo 1 — eval de un caso realista (empieza aquí)
+`evals/dataset.jsonl` + `evals/test_support_eval.py`: un asistente de soporte fintech evaluado con **LLM-as-judge** (GEval) + AnswerRelevancy sobre un dataset. Dos casos traen respuestas incorrectas a propósito (dispute-window, card-blocked) → el judge debe reprobarlas = el **false green** que atrapa el eval-gate.
+
+```bash
+export OPENAI_API_KEY=sk-...
+pip install -r evals/requirements.txt
+deepeval test run evals/test_support_eval.py
+```
+Siguiente paso tuyo: reemplaza `dataset.jsonl` con casos reales de un feature de IA/QA tuyo y calibra el judge (etiqueta 15-20 a mano, mide el % de acuerdo).
