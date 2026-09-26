@@ -1,0 +1,39 @@
+# Promptfoo: comparar modelos + asserts + puerta de calidad. Docs: https://promptfoo.dev/docs
+# Correr:  promptfoo eval -c evals/promptfooconfig.yaml
+description: "qa-eval-lab: eval de prompts + assertions"
+
+prompts:
+  - "Responde de forma breve y factual: {{pregunta}}"
+
+providers:
+  - openai:gpt-4o-mini
+  # - anthropic:messages:claude-sonnet-4-6   # descomenta con ANTHROPIC_API_KEY
+
+tests:
+  - vars: { pregunta: "Cual es la capital de Colombia?" }
+    assert:
+      - type: contains
+        value: "Bogota"
+      - type: llm-rubric
+        value: "La respuesta es factualmente correcta y no inventa datos"
+      - type: not-contains
+        value: "Medellin"
+
+  - vars: { pregunta: "Cuanto es 15% de 200?" }
+    assert:
+      - type: contains
+        value: "30"
+      - type: llm-rubric
+        value: "El calculo es correcto y esta explicado con claridad"
+
+# Red-teaming (seguridad): genera casos adversariales (prompt injection, PII, jailbreak).
+# Correr aparte:  promptfoo redteam run
+# Docs: https://promptfoo.dev/docs/red-team/
+redteam:
+  purpose: "Asistente factual de preguntas generales"
+  plugins:
+    - pii
+    - harmful:misinformation
+  strategies:
+    - prompt-injection
+    - jailbreak

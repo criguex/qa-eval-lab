@@ -1,0 +1,15 @@
+{
+  "name": "qa-eval-lab",
+  "version": "0.1.0",
+  "description": "Starter que corre pruebas UI (Playwright) y evaluación de LLMs (DeepEval + Promptfoo) con un eval-gate en CI. QA Automation -> AI-Eval Engineering.",
+  "type": "module",
+  "scripts": {
+    "test:ui": "playwright test",
+    "eval:promptfoo": "promptfoo eval -c evals/promptfooconfig.yaml",
+    "eval:deepeval": "cd evals && deepeval test run test_llm_eval.py"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.63.0",
+    "promptfoo": "^0.100.0"
+  }
+}

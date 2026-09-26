@@ -1,0 +1,29 @@
+name: eval-gate
+on: [push, pull_request]
+jobs:
+  ui-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '20' }
+      - run: npm ci || npm install
+      - run: npx playwright install --with-deps chromium
+      - run: npx playwright test
+  llm-evals:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - run: pip install -r evals/requirements.txt
+      - name: DeepEval (falla el pipeline si baja el score = eval-gate)
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: cd evals && deepeval test run test_llm_eval.py
+      - uses: actions/setup-node@v4
+        with: { node-version: '20' }
+      - name: Promptfoo eval
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: npx promptfoo@latest eval -c evals/promptfooconfig.yaml
