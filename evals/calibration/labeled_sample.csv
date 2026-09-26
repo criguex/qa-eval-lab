@@ -1,0 +1,11 @@
+case_id,human_label,judge_label
+ach-timing,pass,pass
+dispute-window,fail,fail
+min-balance,pass,pass
+wire-cutoff,pass,pass
+card-blocked,fail,fail
+intl-wire,fail,pass
+2fa-enable,pass,pass
+daily-atm-limit,pass,pass
+loan-eligibility,fail,fail
+refund-policy,pass,fail

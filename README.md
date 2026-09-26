@@ -112,6 +112,21 @@ Deterministic where the spec allows it, scored against acceptance criteria where
 
 ---
 
+## 📚 Modules
+
+Each module isolates a failure mode that a naive "it returned something" check would miss.
+
+| # | Focus | What it catches | Run |
+|---|---|---|---|
+| **1** | Support answers | Well-formed but factually wrong replies (false greens) | `deepeval test run evals/test_support_eval.py` |
+| **2** | RAG | Hallucinations that contradict the retrieved context; weak retrieval | `deepeval test run evals/rag/test_rag_eval.py` |
+| **3** | Agents | Right final answer via the *wrong trajectory* (e.g. transfers money **without** checking balance) | `deepeval test run evals/agent/test_agent_eval.py` |
+| **4** | Judge calibration | A judge nobody validated — measures human↔judge agreement + **Cohen's κ**, flags disagreements | `python evals/calibration/calibrate_judge.py` |
+
+> Modules 1–3 need `OPENAI_API_KEY` (LLM-as-judge). **Module 3's tool-correctness and Module 4 run fully offline** — no API key, deterministic.
+
+---
+
 ## 📂 Project structure
 
 ```
@@ -124,6 +139,9 @@ qa-eval-lab/
 │  ├─ test_support_eval.py # Module 1 — LLM-as-judge over the dataset
 │  ├─ test_llm_eval.py     # minimal GEval + relevancy example
 │  ├─ promptfooconfig.yaml # model compare + rubric + red-team
+│  ├─ rag/                 # Module 2 — RAG: faithfulness + contextual relevancy
+│  ├─ agent/               # Module 3 — agent trajectory: tool-use correctness
+│  ├─ calibration/         # Module 4 — human ↔ judge agreement (Cohen's kappa)
 │  └─ requirements.txt
 ├─ .github/workflows/
 │  └─ eval-gate.yml        # UI + evals as a CI gate
@@ -141,10 +159,10 @@ qa-eval-lab/
 
 ## 🗺️ Roadmap
 
-- [x] **Module 1** — realistic dataset + LLM-as-judge (this repo)
-- [ ] **Module 2** — RAG evaluation (context precision/recall with RAGAS)
-- [ ] **Module 3** — agent / trajectory evaluation (tool-use, task success)
-- [ ] **Module 4** — judge calibration report (human ↔ judge agreement)
+- [x] **Module 1** — realistic dataset + LLM-as-judge
+- [x] **Module 2** — RAG evaluation (faithfulness + contextual relevancy)
+- [x] **Module 3** — agent / trajectory evaluation (tool-use correctness)
+- [x] **Module 4** — judge calibration report (human ↔ judge agreement, Cohen's κ)
 - [ ] Observability layer (Arize Phoenix / Braintrust)
 
 ---
