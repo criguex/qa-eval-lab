@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>explained like you're 8</title>
+<link rel="stylesheet" href="brand.css">
+<style>
+  .col { position: absolute; top: 104px; height: 360px; }
+  .lbl { font-size: 15px; font-weight: 700; line-height: 1.25; }
+  .small { font-size: 13px; color: var(--muted); line-height: 1.3; }
+  .bubble { position: absolute; background: var(--white); color: var(--navy); border-radius: 16px; padding: 10px 14px; font-size: 20px; font-weight: 700; }
+  .bubble::after { content: ''; position: absolute; left: 22px; bottom: -10px; border: 10px solid transparent; border-top-color: var(--white); border-bottom: 0; }
+  .big { font-family: 'Archivo Black'; font-size: 40px; line-height: 1; }
+  .box { position: absolute; left: 0; right: 0; background: var(--deep); border: 1.5px solid var(--grid); border-radius: 14px; padding: 12px 14px; }
+  .track { height: 10px; background: var(--grid); border-radius: 5px; position: relative; margin-top: 8px; }
+  .fill { height: 100%; width: 0; background: var(--coral); border-radius: 5px; }
+  .mark { position: absolute; left: 70%; top: -5px; width: 2px; height: 20px; background: var(--gold); }
+  .lamp { width: 54px; height: 54px; border-radius: 50%; margin: 10px auto; border: 2px solid var(--grid); background: #0A2232; }
+</style>
+</head>
+<body>
+  <div class="abs kicker" style="left:32px;top:22px" data-k="kicker"></div>
+  <div class="abs title" style="left:32px;top:42px" id="title" data-k="title"></div>
+
+  <div class="col" style="left:32px;width:260px">
+    <div class="abs small" id="q" style="left:0;top:0;width:260px;font-size:15px;color:var(--white)" data-k="q"></div>
+    <svg class="abs" id="robot" style="left:40px;top:150px" width="150" height="170" viewBox="0 0 150 170">
+      <line x1="75" y1="8" x2="75" y2="28" stroke="#55DFBD" stroke-width="4"/>
+      <circle cx="75" cy="8" r="7" fill="#FFC56E"/>
+      <rect x="25" y="28" width="100" height="70" rx="18" fill="#123448" stroke="#55DFBD" stroke-width="4"/>
+      <circle cx="56" cy="62" r="10" fill="#F4F7F5"/><circle cx="94" cy="62" r="10" fill="#F4F7F5"/>
+      <circle cx="58" cy="64" r="4" fill="#071B2B"/><circle cx="96" cy="64" r="4" fill="#071B2B"/>
+      <path d="M60 84 Q75 92 90 84" stroke="#F4F7F5" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <rect x="40" y="104" width="70" height="56" rx="12" fill="#123448" stroke="#55DFBD" stroke-width="4"/>
+      <circle cx="75" cy="132" r="9" fill="#55DFBD"/>
+    </svg>
+    <div class="abs small" style="left:0;top:330px;width:260px;text-align:center" data-k="robot"></div>
+    <div class="bubble" id="ans" style="left:24px;top:76px" data-k="a"></div>
+    <div class="abs gold" id="trap" style="left:0;top:356px;width:260px;text-align:center;font-size:13px;font-weight:700" data-k="trap"></div>
+  </div>
+
+  <div class="col" style="left:318px;width:330px">
+    <div class="box" id="lazy" style="top:0;height:150px">
+      <svg class="abs" style="right:14px;top:14px" width="64" height="64" viewBox="0 0 64 64">
+        <circle cx="32" cy="32" r="28" fill="#123448" stroke="#8FA6B0" stroke-width="3"/>
+        <path d="M18 28h10M36 28h10" stroke="#F4F7F5" stroke-width="3" stroke-linecap="round"/>
+        <path d="M24 44h16" stroke="#F4F7F5" stroke-width="3" stroke-linecap="round"/>
+        <text x="46" y="14" font-size="11" fill="#ABC0C8" font-family="sans-serif">z z</text>
+      </svg>
+      <div class="lbl" style="width:220px" data-k="lazy"></div>
+      <div class="abs" id="lazyV" style="left:14px;top:86px">
+        <span class="big mint">✓</span>
+        <span class="gold" style="font-weight:700;font-size:16px;margin-left:8px" data-k="oops"></span>
+      </div>
+    </div>
+    <div class="box" id="teacher" style="top:166px;height:194px">
+      <svg class="abs" style="right:10px;top:12px" width="78" height="72" viewBox="0 0 78 72">
+        <circle cx="32" cy="34" r="28" fill="#123448" stroke="#55DFBD" stroke-width="3"/>
+        <circle cx="22" cy="30" r="7" fill="none" stroke="#F4F7F5" stroke-width="3"/>
+        <circle cx="42" cy="30" r="7" fill="none" stroke="#F4F7F5" stroke-width="3"/>
+        <path d="M29 30h6M22 46q10 6 20 0" stroke="#F4F7F5" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <circle cx="62" cy="52" r="10" fill="none" stroke="#FFC56E" stroke-width="4"/>
+        <path d="M69 59l7 8" stroke="#FFC56E" stroke-width="5" stroke-linecap="round"/>
+      </svg>
+      <div class="lbl" style="width:228px" data-k="teacher"></div>
+      <div class="small" style="margin-top:6px" id="key" data-k="key"></div>
+      <div id="meter" style="margin-top:6px;width:220px">
+        <div class="track"><div class="fill" id="score"></div><div class="mark"></div></div>
+        <div class="small" style="margin-top:6px" data-k="low"></div>
+      </div>
+      <div class="abs" id="teachV" style="right:18px;bottom:16px">
+        <span class="big coral">✗</span>
+        <span class="coral" style="font-weight:700;font-size:16px" data-k="wrong"></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="col" style="left:676px;width:252px">
+    <div class="abs" style="left:76px;top:0;width:100px;height:214px;background:var(--deep);border:2px solid var(--grid);border-radius:22px;padding:4px 0">
+      <div class="lamp" id="red"></div>
+      <div class="lamp" id="amber"></div>
+      <div class="lamp" id="green"></div>
+    </div>
+    <div class="abs lbl mint" id="go" style="left:0;top:230px;width:252px;text-align:center" data-k="go"></div>
+    <div class="abs small" id="stop" style="left:0;top:290px;width:252px;text-align:center" data-k="stop"></div>
+  </div>
+
+  <div class="caption" id="cap" data-k="cap"></div>
+  <div class="sign">Cristian Guerra · QA · Medellín</div>
+
+<script src="brand.js"></script>
+<script>
+const T = {
+  en: {
+    kicker: "qa-eval-lab · explained like you're 8",
+    title: "Who checks the robot's homework?",
+    q: 'Question: "What is the capital of Colombia?"',
+    a: 'Medellin!',
+    robot: 'The AI robot answers',
+    trap: 'A wrong answer we planted on purpose',
+    lazy: 'Lazy checker: is it a nice sentence?',
+    oops: 'Oops! A false green',
+    teacher: 'Teacher (the judge): does it match the answer key?',
+    key: 'Answer key: "Bogota"',
+    low: 'Score too low: it needs 0.7 to pass',
+    wrong: 'wrong!',
+    go: 'The teacher caught it → green light',
+    stop: 'If the teacher had said ✓, the light would turn red: stop and fix it.',
+    cap: 'Real case from evals/test_llm_eval.py, told simply. The answer key and the 0.7 bar come from the repo.',
+  },
+  es: {
+    kicker: 'qa-eval-lab · explicado para un niño de 8 años',
+    title: '¿Quién le revisa la tarea al robot?',
+    q: 'Pregunta: "¿Cuál es la capital de Colombia?"',
+    a: '¡Medellín!',
+    robot: 'El robot de IA responde',
+    trap: 'Una respuesta mala puesta a propósito',
+    lazy: 'Revisor perezoso: ¿la frase se ve bonita?',
+    oops: '¡Uy! Un falso verde',
+    teacher: 'Profe (el juez): ¿coincide con la respuesta correcta?',
+    key: 'Respuesta correcta: "Bogotá"',
+    low: 'Puntaje muy bajo: necesita 0.7 para pasar',
+    wrong: '¡mal!',
+    go: 'El profe la atrapó → luz verde',
+    stop: 'Si el profe hubiera dicho ✓, la luz se pondría roja: para y arréglalo.',
+    cap: 'Caso real de evals/test_llm_eval.py, contado fácil. La respuesta correcta y la barra de 0.7 salen del repo.',
+  },
+};
+const lang = new URLSearchParams(location.search).get('lang') === 'es' ? 'es' : 'en';
+document.documentElement.lang = lang;
+document.querySelectorAll('[data-k]').forEach((e) => { e.textContent = T[lang][e.dataset.k]; });
+
+window.DURATION = 13;
+window.render = (t) => {
+  fade('title', t, 0, 0.4);
+  fade('q', t, 0.4, 0.4);
+  fade('robot', t, 0.8, 0.4);
+  fade('ans', t, 1.6, 0.4);
+  fade('trap', t, 2.4, 0.4);
+  fade('lazy', t, 3.2, 0.4);
+  fade('lazyV', t, 4.2, 0.3);
+  fade('teacher', t, 5.4, 0.4);
+  fade('key', t, 6.0, 0.4);
+  fade('meter', t, 6.4, 0.3);
+  $('score').style.width = `${18 * p(t, 6.6, 7.6)}%`;
+  fade('teachV', t, 7.8, 0.3);
+  const g = p(t, 9.0, 9.4);
+  $('green').style.background = `rgba(85,223,189,${0.15 + 0.85 * g})`;
+  $('green').style.boxShadow = `0 0 ${24 * g}px rgba(85,223,189,${0.8 * g})`;
+  fade('go', t, 9.2, 0.4);
+  fade('stop', t, 10.6, 0.5);
+  const r = t >= 10.6 ? 0.25 + 0.35 * (0.5 + 0.5 * Math.cos((t - 10.6) * 4)) : 0;
+  $('red').style.background = `rgba(251,129,118,${r})`;
+  fade('cap', t, 0.8, 0.6);
+};
+</script>
+</body>
+</html>

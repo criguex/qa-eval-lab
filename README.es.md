@@ -2,6 +2,29 @@
 
 ![qa-eval-lab: pruebas UI con Playwright y evaluación de LLM (DeepEval · Promptfoo) detrás de un eval-gate en CI](docs/assets/banner.svg)
 
+## Explicado para un niño de 8 años
+
+Imagínate un robot que responde preguntas, como un compañero haciendo la tarea. A veces escribe una frase que se ve muy bonita pero está mal. Este proyecto es el profe que revisa cada respuesta contra la respuesta correcta, no solo la letra bonita. Cada vez que alguien cambia el robot, un robot revisor en GitHub corre todas las pruebas, y si una falla, la luz se pone roja hasta que alguien lo arregle. El profe necesita una clave especial para trabajar; sin ella, el robot revisor solo revisa la parte de la página web y lo avisa.
+
+**Un ejemplo real de este repo**
+
+- Imagínate que le preguntas al robot "¿Cuál es la capital de Colombia?" y responde "La capital de Colombia es Medellin." La frase está bonita, pero la respuesta está mal: es Bogotá.
+- Un revisor perezoso que solo pregunta "¿respondió con una frase?" dice ✓. Un ✓ que debió ser ✗ se llama *falso verde*.
+- Aquí un profe de IA (el juez) compara la respuesta con la correcta, "Bogota", y le pone una nota de 0 a 1; por debajo de 0.7 está mal. La respuesta de Medellín la pusimos a propósito, como trampa: la prueba solo pasa si el profe dice ✗.
+- Lo que ganamos: si algún día el profe empieza a dejar pasar respuestas malas, la luz se pone roja antes de que el error le llegue a la gente.
+
+![Animación ilustrada: el robot responde "Medellín", un revisor perezoso dice que sí (un falso verde), el profe compara con la respuesta correcta "Bogotá" y dice que está mal, y el semáforo se pone en verde porque el profe atrapó la trampa](docs/assets/explained.es.gif)
+
+| Palabra difícil | Qué quiere decir |
+|---|---|
+| CI | Un robot que revisa la tarea cada vez que alguien entrega un cambio |
+| Prueba (test) | Una pregunta de la que ya sabemos la respuesta, para revisar que algo funciona |
+| LLM | Un programa de computador que escribe respuestas, como un robot de chat |
+| LLM-as-judge | Otra IA que hace de profe y califica las respuestas |
+| Umbral (0.7) | La nota mínima para pasar, como sacar 7 de 10 |
+| Falso verde | Un ✓ que debió ser ✗: parece bien pero está mal |
+| Playwright | Un robot que hace clic en una página web como una persona para revisar que funciona |
+
 <p>
   <img src="https://img.shields.io/badge/Playwright-2EAD33?style=flat-square&logo=playwright&logoColor=white" alt="Playwright"/>
   <img src="https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript"/>

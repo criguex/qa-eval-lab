@@ -2,6 +2,29 @@
 
 ![qa-eval-lab: Playwright UI tests and LLM evaluation (DeepEval · Promptfoo) behind one CI eval-gate](docs/assets/banner.svg)
 
+## Explained like you're 8
+
+Imagine a robot that answers questions, like a classmate doing homework. Sometimes it writes a sentence that looks neat but is wrong. This project is the teacher who checks each answer against the answer key, not just the handwriting. Every time someone changes the robot, a checking robot on GitHub runs all the checks, and if one fails, the light turns red until someone fixes it. The teacher needs a special key to work; without it, the checking robot only checks the website part and says so.
+
+**A real example from this repo**
+
+- Imagine you ask the robot "What is the capital of Colombia?" and it answers "La capital de Colombia es Medellin." Nice sentence, wrong answer: it's Bogotá.
+- A lazy check that only asks "did it answer with a sentence?" says ✓. A ✓ that should have been ✗ is called a *false green*.
+- Here an AI teacher (the judge) compares the answer with the answer key "Bogota" and gives a score from 0 to 1; under 0.7 means wrong. We put the Medellín answer there on purpose, as a trap: the test passes only if the teacher says ✗.
+- What we gain: if the teacher ever starts letting wrong answers through, the light turns red before the mistake reaches real people.
+
+![Illustrated animation: the robot answers "Medellin", a lazy checker says yes (a false green), the teacher compares with the answer key "Bogota" and says wrong, and the traffic light turns green because the teacher caught the trap](docs/assets/explained.gif)
+
+| Hard word | What it means |
+|---|---|
+| CI | A robot that checks the homework every time someone hands in a change |
+| Test | A question we already know the answer to, used to check that something works |
+| LLM | A computer program that writes answers, like a chat robot |
+| LLM-as-judge | Another AI that plays the teacher and grades the answers |
+| Threshold (0.7) | The lowest grade that still passes, like needing 7 out of 10 |
+| False green | A ✓ that should have been ✗: it looks right but it is wrong |
+| Playwright | A robot that clicks around a website like a person to check that it works |
+
 <p>
   <img src="https://img.shields.io/badge/Playwright-2EAD33?style=flat-square&logo=playwright&logoColor=white" alt="Playwright"/>
   <img src="https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript"/>
