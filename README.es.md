@@ -127,19 +127,19 @@ Cada módulo aísla un modo de falla que una revisión ingenua de "devolvió alg
 | **1** | Respuestas de soporte | Respuestas bien formadas pero falsas (falsos verdes) | `deepeval test run evals/test_support_eval.py` |
 | **2** | RAG | Alucinaciones que contradicen el contexto recuperado (el caso de giros internacionales); recuperación débil | `deepeval test run evals/rag/test_rag_eval.py` |
 | **3** | Agentes | Respuesta final correcta por la *trayectoria equivocada* (p. ej. transfiere dinero **sin** revisar el saldo) | `deepeval test run evals/agent/test_agent_eval.py` |
-| **4** | Calibración del juez | Un juez que nadie validó: mide el acuerdo humano↔juez + **κ de Cohen** y señala los desacuerdos | `python evals/calibration/calibrate_judge.py` |
+| **4** | Calibración del juez | Un juez que nadie validó: muestra cómo se calculan el acuerdo humano↔juez + **κ de Cohen** y señala los desacuerdos (trae una muestra ilustrativa, no una corrida medida) | `python evals/calibration/calibrate_judge.py` |
 
 Los módulos 1 y 2 necesitan `OPENAI_API_KEY` (LLM-as-judge). El módulo 4 corre sin conexión. El módulo 3 no hace llamadas a la API, pero DeepEval 4.3.1 no construye la métrica si `OPENAI_API_KEY` no está definida (sirve cualquier valor).
 
 ## Resultados reales
 
-![Corrida real en terminal, 26 de octubre de 2026: Playwright 3 pasan; calibración del juez 8/10 de acuerdo y kappa de Cohen 0.58](docs/assets/local-run.gif)
+![Corrida real en terminal, 26 de octubre de 2026: Playwright 3 pasan; el script de calibración corre sobre su muestra ilustrativa y lo dice antes de imprimir 8/10 y kappa 0.58](docs/assets/local-run.gif)
 
 Lo que corrí en mi máquina el 26 de octubre de 2026, sin clave de API:
 
 - **Playwright** (`npx playwright test`, Playwright 1.64.1): `3 passed (4.2s)`. La prueba de sesión revisa la URL `/secure` y el título Secure Area; con un `storageState` vacío termina en `/login` y falla, así que de verdad prueba la sesión reutilizada.
 - **Prueba del falso verde** (`evals/test_llm_eval.py`): con un juez simulado, un puntaje de `0.1` hace pasar `test_false_green_detectado`, `0.9` la hace fallar y un error del juez la deja en error en vez de pasar. Con `OPENAI_API_KEY` vacía, pytest se detiene al recolectar (`OpenAI API key is empty`); por eso CI salta esos pasos cuando no hay secreto.
-- **Calibración del juez** (Módulo 4): 10 casos etiquetados, acuerdo `8/10 (80.0%)`, κ de Cohen `0.58`, por debajo del `0.6` que el propio script marca como "recalibrar rúbrica". Desacuerdos: `intl-wire` (humano fail, juez pass) y `refund-policy` (humano pass, juez fail).
+- **Calibración del juez** (Módulo 4): no es un resultado. El módulo 4 trae una muestra ilustrativa: las dos columnas de etiquetas se escribieron a mano como valores de ejemplo y 5 de los 10 `case_id` no están en el dataset. El script muestra cómo se calculan el acuerdo y el kappa de Cohen; el 8/10 y el κ 0.58 son la aritmética de ese ejemplo, no una corrida medida de un juez. El CSV marca cada fila con `source=illustrative` y el script imprime `illustrative sample, not a measured run` antes de los números.
 - **Llamadas a herramientas del agente** (Módulo 3, DeepEval 4.3.1, clave de relleno): `happy-path-transfer` saca `1.0`; `skips-balance-check` saca `0.67` contra el umbral por defecto `0.5`, así que **pasa**. El caso que se quería atrapar no se atrapa hasta subir el umbral.
 
 **Historia del CI:** las cinco corridas en `main` del 26 de septiembre de 2026 quedaron en rojo. `llm-evals` se detenía al recolectar las pruebas porque el repo no tiene el secreto `OPENAI_API_KEY` (`DeepEvalError: OpenAI API key is empty`), y `ui-tests` terminó con `1 passed, 2 failed` porque la prueba de sesión esperaba un mensaje flash que sale una sola vez. Desde el 26 de octubre de 2026 el check está en verde: en la [corrida 40373649268](https://github.com/criguex/qa-eval-lab/actions/runs/40373649268) `ui-tests` terminó con `3 passed (5.8s)` y `llm-evals` pasó con el aviso "OPENAI_API_KEY is not set, so the DeepEval and Promptfoo steps were skipped". En verde y sin la clave quiere decir que pasaron las pruebas de UI y que los pasos del LLM se saltaron; no se calificó ninguna respuesta de un LLM.
@@ -148,6 +148,7 @@ Lo que corrí en mi máquina el 26 de octubre de 2026, sin clave de API:
 
 - Sin el secreto `OPENAI_API_KEY`, CI no evalúa ninguna salida de LLM: un check en verde significa que pasaron las pruebas UI y que los pasos de LLM se saltaron, como dice el aviso.
 - En el módulo 3, `skips-balance-check` pasa con el umbral por defecto de DeepEval (`0.67` contra `0.5`). Dejo el umbral como está: subirlo después de ver el puntaje sería ajustar al resultado.
+- El módulo 4 todavía no tiene una calibración medida. Siguiente paso: etiquetar a mano casos que existan en `evals/dataset.jsonl`, correr el juez de verdad sobre esos mismos casos y registrar las dos columnas con su origen (quién etiquetó, qué modelo juez y cuándo).
 - Los módulos 1 a 4 y `promptfoo redteam` se corren a mano; el workflow solo corre `test_llm_eval.py` y `promptfooconfig.yaml`.
 - Un check en rojo solo bloquea el merge si `eval-gate` es un check obligatorio; `main` todavía no tiene protección de rama.
 - Las pruebas UI apuntan a un sitio demo público (`the-internet.herokuapp.com`), así que su comportamiento puede cambiar sin aviso.
@@ -189,7 +190,8 @@ Las animaciones salen de `docs/scenes/*.html` con `node docs/scenes/export.mjs` 
 - [x] **Módulo 1** — dataset realista + LLM-as-judge
 - [x] **Módulo 2** — evaluación de RAG (fidelidad + relevancia del contexto)
 - [x] **Módulo 3** — evaluación de agentes / trayectoria (uso correcto de herramientas)
-- [x] **Módulo 4** — reporte de calibración del juez (acuerdo humano ↔ juez, κ de Cohen)
+- [x] **Módulo 4** — script de calibración del juez (acuerdo humano ↔ juez, κ de Cohen) sobre una muestra ilustrativa
+- [ ] Módulo 4 con corrida medida: etiquetas a mano + etiquetas del juez real sobre casos del dataset
 - [ ] Capa de observabilidad (Arize Phoenix / Braintrust)
 
 ## Autor

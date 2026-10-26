@@ -21,7 +21,7 @@
   </div>
 
   <div class="abs note" id="note1" style="left:32px;top:462px"><span class="mint">✓</span>&nbsp; <span class="muted">The session spec checks the /secure URL and the Secure Area heading; with an empty session it lands on /login and fails.</span></div>
-  <div class="abs note" id="note2" style="left:32px;top:484px"><span class="gold">!</span>&nbsp; <span class="muted">κ 0.58 is under 0.6: by the script's own rule, the judge rubric needs recalibrating.</span></div>
+  <div class="abs note" id="note2" style="left:32px;top:484px"><span class="gold">!</span>&nbsp; <span class="muted">Illustrative sample: labels typed by hand, 5/10 ids not in the dataset. 8/10 and κ 0.58 are example arithmetic, not a measured judge run.</span></div>
 
   <div class="sign">Cristian Guerra · QA · Medellín</div>
 
@@ -30,7 +30,6 @@
 window.DURATION = 15;
 const L = [
   { at: 0.8, cmd: '$ npx playwright test' },
-  { at: 1.8, text: '' },
   { at: 1.9, text: 'Running 3 tests using 1 worker' },
   { at: 2.6, text: '  ✓  1 [setup] › tests/auth.setup.ts:5:1 › authenticate (1.4s)', c: 'mint' },
   { at: 3.4, text: '  ✓  2 [ui] › tests/ui/example.spec.ts:3:1 › sesion autenticada reutilizada (storageState) (914ms)', c: 'mint' },
@@ -39,10 +38,11 @@ const L = [
   { at: 4.8, text: '  3 passed (4.2s)', c: 'mint' },
   { at: 5.2, text: '' },
   { at: 6.6, cmd: '$ python evals/calibration/calibrate_judge.py' },
+  { at: 7.9, text: 'AVISO: illustrative sample, not a measured run', c: 'gold' },
+  { at: 8.1, text: '  etiquetas escritas a mano como ejemplo; 5/10 case_id no estan en dataset.jsonl', c: 'gold' },
   { at: 8.4, text: 'Casos: 10' },
   { at: 8.7, text: 'Acuerdo: 8/10 (80.0%)' },
-  { at: 9.1, text: "Cohen's kappa: 0.58  (>0.8 excelente · 0.6-0.8 aceptable · <0.6 recalibrar rubrica)", c: 'gold' },
-  { at: 9.4, text: '' },
+  { at: 9.1, text: "Cohen's kappa: 0.58  (>0.8 excelente · 0.6-0.8 aceptable · <0.6 recalibrar rubrica)" },
   { at: 9.6, text: 'Desacuerdos (revisar rubrica/etiqueta humana):' },
   { at: 9.9, text: '  - intl-wire: humano=fail vs judge=pass', c: 'coral' },
   { at: 10.2, text: '  - refund-policy: humano=pass vs judge=fail', c: 'coral' },

@@ -3,6 +3,12 @@ Modulo 4 — calibracion del LLM-as-judge (la skill que separa a un AI-Eval Engi
 Un judge solo es confiable si concuerda con humanos. Etiqueta N casos a mano
 (human_label), corre el judge sobre los mismos (judge_label) y mide el acuerdo.
 
+labeled_sample.csv es una muestra ILUSTRATIVA (columna source=illustrative): las dos
+columnas de etiquetas se escribieron a mano como valores de ejemplo y 5 de los 10
+case_id no estan en evals/dataset.jsonl. El script muestra como se calculan el acuerdo
+y el kappa; con ese archivo, 8/10 y 0.58 son la aritmetica del ejemplo, no una corrida
+medida de un juez.
+
 Lee labeled_sample.csv y reporta:
   - % de acuerdo
   - Cohen's kappa (acuerdo corregido por azar)
@@ -10,6 +16,7 @@ Lee labeled_sample.csv y reporta:
 
 Correr (offline, sin API):  python evals/calibration/calibrate_judge.py
 """
+import json
 import os
 import pandas as pd
 from sklearn.metrics import cohen_kappa_score
@@ -24,6 +31,12 @@ def main():
     kappa = cohen_kappa_score(df["human_label"], df["judge_label"])
     disagreements = df[df["human_label"] != df["judge_label"]]
 
+    if "source" in df and (df["source"] == "illustrative").any():
+        with open(os.path.join(HERE, "..", "dataset.jsonl")) as f:
+            known = {json.loads(line)["id"] for line in f if line.strip()}
+        missing = [c for c in df["case_id"] if c not in known]
+        print("AVISO: illustrative sample, not a measured run")
+        print(f"  etiquetas escritas a mano como ejemplo; {len(missing)}/{total} case_id no estan en dataset.jsonl")
     print(f"Casos: {total}")
     print(f"Acuerdo: {agree}/{total} ({pct:.1f}%)")
     print(f"Cohen's kappa: {kappa:.2f}  (>0.8 excelente · 0.6-0.8 aceptable · <0.6 recalibrar rubrica)")

@@ -80,6 +80,6 @@
 
     <rect x="40" y="474" width="1200" height="58" rx="12" fill="#0D2638" stroke="#214456"/>
     <text x="60" y="500" font-size="14" font-weight="700" fill="#FFC56E">! Run by hand, outside the workflow</text>
-    <text x="60" y="520" font-size="14" fill="#ABC0C8">Module 1 support dataset · Module 2 RAG · Module 3 agent tool calls · Module 4 judge calibration (Cohen's κ) · promptfoo redteam</text>
+    <text x="60" y="520" font-size="14" fill="#ABC0C8">Module 1 support dataset · Module 2 RAG · Module 3 agent tool calls · Module 4 judge calibration (Cohen's κ, illustrative sample) · promptfoo redteam</text>
   </g>
 </svg>

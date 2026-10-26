@@ -127,19 +127,19 @@ Each module isolates a failure mode that a naive "it returned something" check w
 | **1** | Support answers | Well-formed but factually wrong replies (false greens) | `deepeval test run evals/test_support_eval.py` |
 | **2** | RAG | Hallucinations that contradict the retrieved context (the international-wires case); weak retrieval | `deepeval test run evals/rag/test_rag_eval.py` |
 | **3** | Agents | Right final answer via the *wrong trajectory* (e.g. transfers money **without** checking balance) | `deepeval test run evals/agent/test_agent_eval.py` |
-| **4** | Judge calibration | A judge nobody validated: measures human↔judge agreement + **Cohen's κ**, flags disagreements | `python evals/calibration/calibrate_judge.py` |
+| **4** | Judge calibration | A judge nobody validated: shows how human↔judge agreement + **Cohen's κ** are computed and flags disagreements (ships an illustrative sample, not a measured run) | `python evals/calibration/calibrate_judge.py` |
 
 Modules 1 and 2 need `OPENAI_API_KEY` (LLM-as-judge). Module 4 runs fully offline. Module 3 makes no API call, but DeepEval 4.3.1 refuses to build the metric unless `OPENAI_API_KEY` is set (any value works).
 
 ## Real results
 
-![Real local terminal run, 26 Oct 2026: Playwright 3 passed; judge calibration 8/10 agreement and Cohen's kappa 0.58](docs/assets/local-run.gif)
+![Real local terminal run, 26 Oct 2026: Playwright 3 passed; the calibration script runs on its illustrative sample and says so before printing 8/10 and kappa 0.58](docs/assets/local-run.gif)
 
 What I ran locally on 26 Oct 2026, without an API key:
 
 - **Playwright** (`npx playwright test`, Playwright 1.64.1): `3 passed (4.2s)`. The session spec checks the `/secure` URL and the Secure Area heading; with an empty `storageState` it lands on `/login` and fails, so it really tests the reused session.
 - **False-green test** (`evals/test_llm_eval.py`): with a stubbed judge, a score of `0.1` makes `test_false_green_detectado` pass, `0.9` makes it fail, and a judge error makes it error instead of passing. With `OPENAI_API_KEY` empty, pytest stops at collection (`OpenAI API key is empty`), which is why CI skips those steps without the secret.
-- **Judge calibration** (Module 4): 10 labelled cases, agreement `8/10 (80.0%)`, Cohen's κ `0.58`, which is under the script's own `0.6` bar for "recalibrate the rubric". Disagreements: `intl-wire` (human fail, judge pass) and `refund-policy` (human pass, judge fail).
+- **Judge calibration** (Module 4) is not a result. Module 4 ships an illustrative sample: both label columns were entered by hand as example values, and 5 of the 10 case ids are not in the dataset. The script shows how agreement and Cohen's kappa are computed; 8/10 and κ 0.58 are the arithmetic of that example, not a measured judge run. The CSV marks every row `source=illustrative` and the script prints `illustrative sample, not a measured run` before the numbers.
 - **Agent tool calls** (Module 3, DeepEval 4.3.1, placeholder key): `happy-path-transfer` scores `1.0`; `skips-balance-check` scores `0.67` against the default threshold `0.5`, so it **passes**. The case meant to be caught is not caught until the threshold is raised.
 
 **CI history:** the five runs on `main` from 26 Sep 2026 were red. `llm-evals` stopped at collection because the repo has no `OPENAI_API_KEY` secret (`DeepEvalError: OpenAI API key is empty`), and `ui-tests` ended `1 passed, 2 failed` because the session spec waited for a one-time flash message. Since 26 Oct 2026 the check is green: in [run 40373649268](https://github.com/criguex/qa-eval-lab/actions/runs/40373649268) `ui-tests` ended `3 passed (5.8s)` and `llm-evals` succeeded with the notice "OPENAI_API_KEY is not set, so the DeepEval and Promptfoo steps were skipped". Green without the key means the UI tests passed and the LLM steps were skipped; no LLM output was judged.
@@ -148,6 +148,7 @@ What I ran locally on 26 Oct 2026, without an API key:
 
 - Without the `OPENAI_API_KEY` secret, CI evaluates no LLM output: a green check then means the UI tests passed and the LLM steps were skipped, as the notice says.
 - Module 3's `skips-balance-check` passes at DeepEval's default threshold (`0.67` vs `0.5`). I leave the threshold as it is: raising it after seeing the score would be tuning to the result.
+- Module 4 has no measured calibration yet. Next step: hand-label cases that exist in `evals/dataset.jsonl`, run the real judge on those same cases, and record both columns with their origin (who labelled, which judge model and when).
 - Modules 1–4 and `promptfoo redteam` are run by hand; the workflow only runs `test_llm_eval.py` and `promptfooconfig.yaml`.
 - A red check blocks merges only when `eval-gate` is a required status check; `main` has no branch protection yet.
 - The UI tests target a public demo site (`the-internet.herokuapp.com`), so its behaviour can change under them.
@@ -189,7 +190,8 @@ The animations are rendered from `docs/scenes/*.html` with `node docs/scenes/exp
 - [x] **Module 1** — realistic dataset + LLM-as-judge
 - [x] **Module 2** — RAG evaluation (faithfulness + contextual relevancy)
 - [x] **Module 3** — agent / trajectory evaluation (tool-use correctness)
-- [x] **Module 4** — judge calibration report (human ↔ judge agreement, Cohen's κ)
+- [x] **Module 4** — judge calibration script (human ↔ judge agreement, Cohen's κ) on an illustrative sample
+- [ ] Module 4 measured run: hand labels + real judge labels on dataset cases
 - [ ] Observability layer (Arize Phoenix / Braintrust)
 
 ## Author

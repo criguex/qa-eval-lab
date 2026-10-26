@@ -20,10 +20,11 @@
   <rect x="696" y="56" width="528" height="208" rx="16" fill="#0D2638" stroke="#214456"/>
   <circle cx="720" cy="80" r="5" fill="#214456"/><circle cx="738" cy="80" r="5" fill="#214456"/><circle cx="756" cy="80" r="5" fill="#214456"/>
   <g font-family="Menlo,Consolas,monospace" font-size="15">
-    <text x="720" y="122" fill="#F4F7F5">$ python evals/calibration/calibrate_judge.py</text>
-    <text x="720" y="154" fill="#F4F7F5">Acuerdo: 8/10 (80.0%)</text>
-    <text x="720" y="180" fill="#FFC56E">Cohen's kappa: 0.58 <tspan fill="#ABC0C8">(… &lt;0.6 recalibrar rubrica)</tspan></text>
-    <text x="720" y="206" fill="#ABC0C8">Desacuerdos (revisar rubrica/etiqueta humana):</text>
-    <text x="720" y="232" fill="#FB8176">  - intl-wire: <tspan fill="#F4F7F5">humano=fail vs judge=pass</tspan></text>
+    <text x="720" y="114" fill="#F4F7F5">$ npx playwright test</text>
+    <text x="720" y="140" fill="#ABC0C8">Running 3 tests using 1 worker</text>
+    <text x="720" y="166" fill="#55DFBD">  ✓ <tspan fill="#F4F7F5">[setup] authenticate (1.4s)</tspan></text>
+    <text x="720" y="192" fill="#55DFBD">  ✓ <tspan fill="#F4F7F5">[ui] sesion autenticada reutilizada</tspan></text>
+    <text x="720" y="218" fill="#55DFBD">  ✓ <tspan fill="#F4F7F5">[ui] logout funciona (1.1s)</tspan></text>
+    <text x="720" y="244" fill="#55DFBD">  3 passed (4.2s)</text>
   </g>
 </svg>
