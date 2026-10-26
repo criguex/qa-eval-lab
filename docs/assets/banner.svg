@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="320" viewBox="0 0 1280 320" role="img" aria-label="qa-eval-lab · Playwright UI tests and LLM evaluation behind one CI eval-gate">
+  <defs>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#55DFBD" stroke-opacity="0.06" stroke-width="1"/>
+    </pattern>
+    <clipPath id="r"><rect width="1280" height="320" rx="20"/></clipPath>
+  </defs>
+  <g clip-path="url(#r)">
+    <rect width="1280" height="320" fill="#071B2B"/>
+    <rect width="1280" height="320" fill="url(#grid)"/>
+    <rect x="0" y="0" width="8" height="320" fill="#55DFBD"/>
+  </g>
+  <g font-family="-apple-system,Segoe UI,Helvetica,Arial,sans-serif">
+    <text x="64" y="118" font-size="54" font-weight="700" fill="#F4F7F5">qa-eval-lab</text>
+    <text x="66" y="164" font-size="22" fill="#F4F7F5">Playwright UI tests and LLM evaluation</text>
+    <text x="66" y="196" font-size="22" fill="#ABC0C8">(DeepEval · Promptfoo) behind one CI eval-gate:</text>
+    <text x="66" y="226" font-size="22" fill="#ABC0C8">a fluent but wrong answer has to fail the build.</text>
+    <text x="66" y="276" font-size="15" font-weight="600" fill="#55DFBD">Cristian Guerra · QA · Medellín</text>
+  </g>
+  <rect x="696" y="56" width="528" height="208" rx="16" fill="#0D2638" stroke="#214456"/>
+  <circle cx="720" cy="80" r="5" fill="#214456"/><circle cx="738" cy="80" r="5" fill="#214456"/><circle cx="756" cy="80" r="5" fill="#214456"/>
+  <g font-family="Menlo,Consolas,monospace" font-size="15">
+    <text x="720" y="122" fill="#F4F7F5">$ python evals/calibration/calibrate_judge.py</text>
+    <text x="720" y="154" fill="#F4F7F5">Acuerdo: 8/10 (80.0%)</text>
+    <text x="720" y="180" fill="#FFC56E">Cohen's kappa: 0.58 <tspan fill="#ABC0C8">(… &lt;0.6 recalibrar rubrica)</tspan></text>
+    <text x="720" y="206" fill="#ABC0C8">Desacuerdos (revisar rubrica/etiqueta humana):</text>
+    <text x="720" y="232" fill="#FB8176">  - intl-wire: <tspan fill="#F4F7F5">humano=fail vs judge=pass</tspan></text>
+  </g>
+</svg>

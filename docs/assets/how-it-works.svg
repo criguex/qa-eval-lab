@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="560" viewBox="0 0 1280 560" role="img" aria-label="How the eval-gate works: every push or pull request runs a Playwright job and an LLM-eval job (DeepEval then Promptfoo); if any step exits non-zero the check fails">
+  <defs>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#55DFBD" stroke-opacity="0.06" stroke-width="1"/>
+    </pattern>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#55DFBD"/></marker>
+    <marker id="c" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#FB8176"/></marker>
+  </defs>
+  <rect width="1280" height="560" rx="20" fill="#071B2B"/>
+  <rect width="1280" height="560" rx="20" fill="url(#grid)"/>
+
+  <g font-family="-apple-system,Segoe UI,Helvetica,Arial,sans-serif">
+    <text x="40" y="52" font-size="26" font-weight="700" fill="#F4F7F5">How the eval-gate decides</text>
+    <text x="40" y="80" font-size="15" fill="#ABC0C8">What .github/workflows/eval-gate.yml runs on every push and pull request. Two jobs in parallel; one red step turns the check red.</text>
+
+    <g fill="none" stroke-width="2.5">
+      <path d="M210 280H230V165H248" stroke="#55DFBD" marker-end="url(#a)"/>
+      <path d="M210 280H230V355H248" stroke="#55DFBD" marker-end="url(#a)"/>
+      <path d="M520 165H558" stroke="#55DFBD" marker-end="url(#a)"/>
+      <path d="M520 355H558" stroke="#55DFBD" marker-end="url(#a)"/>
+      <path d="M830 165H935V203" stroke="#55DFBD" marker-end="url(#a)"/>
+      <path d="M830 355H935V327" stroke="#55DFBD" marker-end="url(#a)"/>
+      <path d="M995 265H1012V175H1038" stroke="#55DFBD" marker-end="url(#a)"/>
+      <path d="M995 265H1012V365H1038" stroke="#FB8176" marker-end="url(#c)"/>
+    </g>
+
+    <g font-size="13" fill="#ABC0C8">
+      <text x="250" y="110">job: ui-tests</text>
+      <text x="250" y="280">job: llm-evals</text>
+      <text x="1018" y="160">no</text>
+      <text x="1018" y="388">yes</text>
+    </g>
+
+    <rect x="40" y="230" width="170" height="100" rx="12" fill="#0D2638" stroke="#214456"/>
+    <text x="58" y="268" font-size="17" font-weight="700" fill="#F4F7F5">Push / PR</text>
+    <text x="58" y="294" font-size="13" font-family="Menlo,Consolas,monospace" fill="#ABC0C8">on: [push,</text>
+    <text x="58" y="312" font-size="13" font-family="Menlo,Consolas,monospace" fill="#ABC0C8">pull_request]</text>
+
+    <rect x="250" y="120" width="270" height="90" rx="12" fill="#0D2638" stroke="#214456"/>
+    <text x="268" y="150" font-size="17" font-weight="700" fill="#F4F7F5">Playwright setup</text>
+    <text x="268" y="174" font-size="14" fill="#ABC0C8">auth.setup.ts logs in once</text>
+    <text x="268" y="196" font-size="13" font-family="Menlo,Consolas,monospace" fill="#ABC0C8">→ .auth/user.json</text>
+
+    <rect x="560" y="120" width="270" height="90" rx="12" fill="#0D2638" stroke="#214456"/>
+    <text x="578" y="150" font-size="17" font-weight="700" fill="#F4F7F5">Playwright UI specs</text>
+    <text x="578" y="174" font-size="14" fill="#ABC0C8">ui/example.spec.ts reuses the</text>
+    <text x="578" y="196" font-size="14" fill="#ABC0C8">session (storageState)</text>
+
+    <rect x="250" y="290" width="270" height="130" rx="12" fill="#0D2638" stroke="#214456"/>
+    <text x="268" y="320" font-size="17" font-weight="700" fill="#F4F7F5">DeepEval (pytest)</text>
+    <text x="268" y="342" font-size="13" font-family="Menlo,Consolas,monospace" fill="#ABC0C8">evals/test_llm_eval.py</text>
+    <text x="268" y="366" font-size="14" fill="#F4F7F5">GEval Correctness ≥ 0.7</text>
+    <text x="268" y="388" font-size="14" fill="#F4F7F5">AnswerRelevancy ≥ 0.7</text>
+    <text x="268" y="410" font-size="14" fill="#ABC0C8"><tspan fill="#55DFBD">✓</tspan> Bogota  ·  <tspan fill="#FB8176">✗</tspan> Medellin (false green)</text>
+
+    <rect x="560" y="290" width="270" height="130" rx="12" fill="#0D2638" stroke="#214456"/>
+    <text x="578" y="320" font-size="17" font-weight="700" fill="#F4F7F5">Promptfoo eval</text>
+    <text x="578" y="342" font-size="13" font-family="Menlo,Consolas,monospace" fill="#ABC0C8">evals/promptfooconfig.yaml</text>
+    <text x="578" y="366" font-size="14" fill="#F4F7F5">openai:gpt-4o-mini</text>
+    <text x="578" y="388" font-size="14" fill="#F4F7F5">contains · not-contains</text>
+    <text x="578" y="410" font-size="14" fill="#F4F7F5">llm-rubric</text>
+
+    <polygon points="935,205 995,265 935,325 875,265" fill="#123448" stroke="#55DFBD" stroke-width="2"/>
+    <text x="935" y="260" font-size="14" font-weight="700" fill="#F4F7F5" text-anchor="middle">any step</text>
+    <text x="935" y="280" font-size="14" font-weight="700" fill="#F4F7F5" text-anchor="middle">exit ≠ 0?</text>
+
+    <rect x="1040" y="130" width="200" height="90" rx="12" fill="#0D2638" stroke="#55DFBD"/>
+    <text x="1058" y="162" font-size="18" font-weight="700" fill="#55DFBD">✓ PASS</text>
+    <text x="1058" y="186" font-size="14" fill="#F4F7F5">check green</text>
+    <text x="1058" y="206" font-size="14" fill="#ABC0C8">merge allowed</text>
+
+    <rect x="1040" y="310" width="200" height="110" rx="12" fill="#0D2638" stroke="#FB8176"/>
+    <text x="1058" y="342" font-size="18" font-weight="700" fill="#FB8176">✗ FAIL</text>
+    <text x="1058" y="366" font-size="14" fill="#F4F7F5">check red</text>
+    <text x="1058" y="388" font-size="14" fill="#ABC0C8">blocks the merge when</text>
+    <text x="1058" y="408" font-size="14" fill="#ABC0C8">eval-gate is required</text>
+
+    <text x="250" y="450" font-size="14" fill="#FB8176">✗ <tspan fill="#ABC0C8">If DeepEval exits ≠ 0 the job stops there and the Promptfoo step is skipped.</tspan></text>
+
+    <rect x="40" y="474" width="1200" height="58" rx="12" fill="#0D2638" stroke="#214456"/>
+    <text x="60" y="500" font-size="14" font-weight="700" fill="#FFC56E">! Run by hand, outside the workflow</text>
+    <text x="60" y="520" font-size="14" fill="#ABC0C8">Module 1 support dataset · Module 2 RAG · Module 3 agent tool calls · Module 4 judge calibration (Cohen's κ) · promptfoo redteam</text>
+  </g>
+</svg>

@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>gate blocks a wrong answer</title>
+<link rel="stylesheet" href="brand.css">
+<style>
+  .qa { display: grid; grid-template-columns: 82px 1fr; row-gap: 8px; font-size: 14px; line-height: 1.35; }
+  .qa .k { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--muted); padding-top: 3px; }
+  .h { font-weight: 700; font-size: 15px; }
+  .line { font-family: 'JetBrains Mono', monospace; font-size: 12px; margin-top: 8px; display: flex; justify-content: space-between; }
+  .track { height: 4px; background: var(--grid); border-radius: 2px; overflow: hidden; margin-top: 10px; }
+  .fill { height: 100%; width: 0; background: var(--mint); }
+  .chip { position: absolute; top: 0; height: 40px; width: 128px; background: var(--deep); border: 1.5px solid var(--grid); border-radius: 10px; padding: 5px 9px; font-family: 'JetBrains Mono', monospace; font-size: 11px; }
+  .chip b { display: block; font-family: 'Space Grotesk', sans-serif; font-size: 12px; margin-top: 1px; }
+  .hl { border-radius: 3px; padding: 0 2px; }
+</style>
+</head>
+<body>
+  <div class="abs kicker" style="left:32px;top:22px">Module 1 · evals/dataset.jsonl · id: dispute-window</div>
+  <div class="abs title" style="left:32px;top:42px" id="title">A fluent answer that is wrong</div>
+
+  <div class="abs card" id="qa" style="left:32px;top:94px;width:896px;padding:14px 18px">
+    <div class="qa">
+      <div class="k" id="k1">input</div><div id="t1">Can I dispute a card charge that is 90 days old?</div>
+      <div class="k" id="k2">expected</div><div id="t2" class="muted">Card disputes generally must be filed within 60 days of the statement; 90 days is usually outside the window.</div>
+      <div class="k" id="k3">actual</div><div id="t3">Yes, you can dispute any charge <span class="hl" id="hl">at any time with no time limit.</span></div>
+    </div>
+  </div>
+
+  <div class="abs card" id="naive" style="left:32px;top:214px;width:440px;height:150px;padding:14px 18px">
+    <div class="h">Naive assertions <span class="muted" style="font-weight:400;font-size:12px">(illustration, not in the repo)</span></div>
+    <div class="line" id="n1"><span>assert actual_output</span><span class="mint">✓ pass</span></div>
+    <div class="line" id="n2"><span>assert "dispute" in actual_output</span><span class="mint">✓ pass</span></div>
+    <div style="margin-top:12px" id="nv"><span class="badge gold">! false green: looks right, is wrong</span></div>
+  </div>
+
+  <div class="abs card" id="judge" style="left:488px;top:214px;width:440px;height:150px;padding:14px 18px">
+    <div class="h">DeepEval · GEval Correctness <span class="mono muted" style="font-weight:400;font-size:11px">threshold 0.7</span></div>
+    <div class="mono muted" style="font-size:11px;margin-top:6px;line-height:1.4">criteria: "…Reprueba fuerte cualquier afirmacion inventada, contradictoria o que exagere/omita limites (plazos, montos, condiciones)."</div>
+    <div class="track"><div class="fill" id="jb"></div></div>
+    <div style="margin-top:10px" id="jv"><span class="badge coral">✗ FAIL · ignores the 60-day window</span></div>
+  </div>
+
+  <div class="abs" style="left:32px;top:384px;width:896px;height:44px">
+    <div class="chip" id="c1" style="left:0">ach-timing<b class="mint">✓ pass</b></div>
+    <div class="chip" id="c2" style="left:136px;border-color:var(--coral)">dispute-window<b class="coral">✗ fail</b></div>
+    <div class="chip" id="c3" style="left:272px">min-balance<b class="mint">✓ pass</b></div>
+    <div class="chip" id="c4" style="left:408px">wire-cutoff<b class="mint">✓ pass</b></div>
+    <div class="chip" id="c5" style="left:544px;border-color:var(--coral)">card-blocked<b class="coral">✗ fail</b></div>
+    <div class="abs" id="gate" style="left:688px;top:0;width:208px;height:40px;border-radius:10px;background:var(--deep);border:2px solid var(--coral);padding:4px 10px">
+      <div style="font-family:'Archivo Black';font-size:15px;color:var(--coral)">✗ BLOCKED</div>
+      <div class="mono muted" style="font-size:10px">deepeval test run exits ≠ 0</div>
+    </div>
+  </div>
+
+  <div class="caption" id="cap">Real case and threshold from the repo. Verdicts are the designed ones (README + test docstring); the judge needs OPENAI_API_KEY and was not run here.</div>
+  <div class="sign">Cristian Guerra · QA · Medellín</div>
+
+<script src="brand.js"></script>
+<script>
+window.DURATION = 12;
+window.render = (t) => {
+  fade('title', t, 0, 0.4);
+  fade('qa', t, 0.4, 0.4);
+  ['k1', 't1'].forEach((id) => fade(id, t, 0.6, 0.4));
+  ['k2', 't2'].forEach((id) => fade(id, t, 1.2, 0.4));
+  ['k3', 't3'].forEach((id) => fade(id, t, 1.9, 0.4));
+  fade('naive', t, 2.6, 0.4);
+  fade('n1', t, 3.0, 0.3);
+  fade('n2', t, 3.5, 0.3);
+  fade('nv', t, 4.1, 0.4);
+  fade('judge', t, 4.8, 0.4);
+  bar('jb', t, 5.2, 7.0);
+  $('jb').style.background = t >= 7.0 ? 'var(--coral)' : 'var(--mint)';
+  fade('jv', t, 7.0, 0.3);
+  const h = p(t, 7.0, 7.4);
+  $('hl').style.background = `rgba(251,129,118,${0.28 * h})`;
+  $('hl').style.color = h > 0.5 ? 'var(--coral)' : 'var(--white)';
+  ['c1', 'c2', 'c3', 'c4', 'c5'].forEach((id, i) => fade(id, t, 7.8 + i * 0.35, 0.3));
+  fade('gate', t, 9.8, 0.4);
+  fade('cap', t, 0.8, 0.6);
+};
+</script>
+</body>
+</html>

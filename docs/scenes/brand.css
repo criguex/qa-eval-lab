@@ -1,0 +1,54 @@
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=JetBrains+Mono:wght@400;700&family=Space+Grotesk:wght@400;500;700&display=block');
+
+:root {
+  --navy: #071B2B;
+  --deep: #0D2638;
+  --panel: #123448;
+  --grid: #214456;
+  --mint: #55DFBD;
+  --gold: #FFC56E;
+  --coral: #FB8176;
+  --white: #F4F7F5;
+  --muted: #ABC0C8;
+  --muted2: #8FA6B0;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  width: 960px;
+  height: 540px;
+  overflow: hidden;
+  background: var(--navy);
+  color: var(--white);
+  font-family: 'Space Grotesk', -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif;
+}
+
+body {
+  position: relative;
+  background-image:
+    linear-gradient(rgba(85, 223, 189, .06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(85, 223, 189, .06) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+body::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 6px;
+  background: var(--mint);
+}
+
+.abs { position: absolute; }
+.mono { font-family: 'JetBrains Mono', Menlo, Consolas, monospace; }
+.kicker { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--mint); letter-spacing: .02em; }
+.title { font-family: 'Archivo Black', sans-serif; font-size: 30px; line-height: 1.1; color: var(--white); }
+.card { background: var(--deep); border: 1.5px solid var(--grid); border-radius: 12px; }
+.muted { color: var(--muted); }
+.mint { color: var(--mint); }
+.gold { color: var(--gold); }
+.coral { color: var(--coral); }
+.sign { position: absolute; right: 24px; bottom: 16px; font-size: 12px; font-weight: 700; color: var(--mint); }
+.caption { position: absolute; left: 32px; bottom: 16px; font-size: 12px; color: var(--muted2); max-width: 680px; line-height: 1.35; }
+.badge { display: inline-block; padding: 3px 10px; border-radius: 999px; font-weight: 700; font-size: 14px; border: 1.5px solid currentColor; }
