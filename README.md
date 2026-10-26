@@ -142,7 +142,7 @@ What I ran locally on 26 Oct 2026, without an API key:
 - **Judge calibration** (Module 4): 10 labelled cases, agreement `8/10 (80.0%)`, Cohen's κ `0.58`, which is under the script's own `0.6` bar for "recalibrate the rubric". Disagreements: `intl-wire` (human fail, judge pass) and `refund-policy` (human pass, judge fail).
 - **Agent tool calls** (Module 3, DeepEval 4.3.1, placeholder key): `happy-path-transfer` scores `1.0`; `skips-balance-check` scores `0.67` against the default threshold `0.5`, so it **passes**. The case meant to be caught is not caught until the threshold is raised.
 
-**CI history:** the first five runs on `main` (26 Sep 2026) were red. `llm-evals` stopped at collection because the repo has no `OPENAI_API_KEY` secret (`DeepEvalError: OpenAI API key is empty`), and `ui-tests` ended `1 passed, 2 failed` because the session spec waited for a one-time flash message. Both causes are fixed: the LLM steps now skip with a notice when there is no key, and the spec checks the page itself.
+**CI history:** the five runs on `main` from 26 Sep 2026 were red. `llm-evals` stopped at collection because the repo has no `OPENAI_API_KEY` secret (`DeepEvalError: OpenAI API key is empty`), and `ui-tests` ended `1 passed, 2 failed` because the session spec waited for a one-time flash message. Since 26 Oct 2026 the check is green: in [run 40373649268](https://github.com/criguex/qa-eval-lab/actions/runs/40373649268) `ui-tests` ended `3 passed (5.8s)` and `llm-evals` succeeded with the notice "OPENAI_API_KEY is not set, so the DeepEval and Promptfoo steps were skipped". Green without the key means the UI tests passed and the LLM steps were skipped; no LLM output was judged.
 
 ## Limits
 
