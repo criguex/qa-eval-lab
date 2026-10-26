@@ -23,13 +23,13 @@ Most test suites verify **deterministic** software. AI features are different: a
 `.github/workflows/eval-gate.yml` runs two jobs on every push and pull request:
 
 - **ui-tests**: `auth.setup.ts` logs in once and saves the session to `.auth/user.json` (`storageState`); the specs in `tests/ui/` reuse it.
-- **llm-evals**: `deepeval test run test_llm_eval.py` scores answers with `GEval` (LLM-as-judge) and `AnswerRelevancy`, both with threshold `0.7`; then `promptfoo eval` checks `contains`, `not-contains` and `llm-rubric` against `openai:gpt-4o-mini`.
+- **llm-evals**: `deepeval test run test_llm_eval.py` scores answers with `GEval` (LLM-as-judge) and `AnswerRelevancy`, both with threshold `0.7`; then `promptfoo eval` checks `contains`, `not-contains` and `llm-rubric` against `openai:gpt-4o-mini`. Both steps run only when the `OPENAI_API_KEY` secret is set; without it they are skipped and the job prints a `::notice::` saying the LLM evaluation did not run.
 
 Any step that exits non-zero turns the check red. If DeepEval fails, the job stops there and the Promptfoo step is skipped.
 
-![Animation: push, both jobs run, the Bogota answer passes, the Medellin answer fails GEval, DeepEval exits non-zero, Promptfoo is skipped and the eval-gate check goes red](docs/assets/how-it-works.gif)
+![Animation: push, both jobs run, the Bogota answer passes, the judge blocks the Medellin answer so the false-green test passes, Promptfoo runs and the eval-gate check goes green](docs/assets/how-it-works.gif)
 
-The animation uses the two cases in `evals/test_llm_eval.py`. The verdicts are the ones the cases are designed to get; I did not run the judge for it because it needs `OPENAI_API_KEY`.
+The animation uses the two cases in `evals/test_llm_eval.py`. `test_false_green_detectado` passes only when the judge scores the wrong "Medellin" answer below `0.7`, so the gate turns red if the judge lets the false green through. The verdicts are the ones the cases are designed to get; I did not run the judge for it because it needs `OPENAI_API_KEY`.
 
 ## The "false green" in action
 
@@ -79,7 +79,7 @@ python evals/calibration/calibrate_judge.py
 | **UI / E2E** | Playwright + TypeScript | Flows against `https://the-internet.herokuapp.com` (or `BASE_URL`) with the real **auth pattern** (`storageState`): log in once, reuse the session in every test. |
 | **Model evals** | DeepEval (pytest-native) | `GEval` (LLM-as-judge), `AnswerRelevancy`, faithfulness and tool-call checks over datasets. |
 | **Prompt / security** | Promptfoo | Model comparison, `llm-rubric` assertions, and **red-teaming** (plugins `pii`, `harmful:misinformation`; strategies `prompt-injection`, `jailbreak`). |
-| **Gate** | GitHub Actions | Runs UI + evals on every push/PR and **fails when a score drops below its threshold**. |
+| **Gate** | GitHub Actions | Runs UI + evals on every push/PR (evals only when the key is set) and **fails when a score drops below its threshold**. |
 
 ### How verdicts are made
 
@@ -110,19 +110,21 @@ Modules 1 and 2 need `OPENAI_API_KEY` (LLM-as-judge). Module 4 runs fully offlin
 
 ## Real results
 
-![Real local terminal run, 26 Oct 2026: Playwright 2 passed and 1 failed; judge calibration 8/10 agreement and Cohen's kappa 0.58](docs/assets/local-run.gif)
+![Real local terminal run, 26 Oct 2026: Playwright 3 passed; judge calibration 8/10 agreement and Cohen's kappa 0.58](docs/assets/local-run.gif)
 
 What I ran locally on 26 Oct 2026, without an API key:
 
-- **Playwright** (`npx playwright test`, Playwright 1.64.1): `2 passed, 1 failed`. The failing spec (`sesion autenticada reutilizada`) waits for the one-time flash message on `/secure`; the page snapshot shows the Secure Area, so the session is reused, and the logout spec passes.
+- **Playwright** (`npx playwright test`, Playwright 1.64.1): `3 passed (4.2s)`. The session spec checks the `/secure` URL and the Secure Area heading; with an empty `storageState` it lands on `/login` and fails, so it really tests the reused session.
+- **False-green test** (`evals/test_llm_eval.py`): with a stubbed judge, a score of `0.1` makes `test_false_green_detectado` pass, `0.9` makes it fail, and a judge error makes it error instead of passing. With `OPENAI_API_KEY` empty, pytest stops at collection (`OpenAI API key is empty`), which is why CI skips those steps without the secret.
 - **Judge calibration** (Module 4): 10 labelled cases, agreement `8/10 (80.0%)`, Cohen's κ `0.58`, which is under the script's own `0.6` bar for "recalibrate the rubric". Disagreements: `intl-wire` (human fail, judge pass) and `refund-policy` (human pass, judge fail).
 - **Agent tool calls** (Module 3, DeepEval 4.3.1, placeholder key): `happy-path-transfer` scores `1.0`; `skips-balance-check` scores `0.67` against the default threshold `0.5`, so it **passes**. The case meant to be caught is not caught until the threshold is raised.
 
-**CI today:** the five runs on `main` (26 Sep 2026) are red. `llm-evals` stops at collection because the repo has no `OPENAI_API_KEY` secret (`DeepEvalError: OpenAI API key is empty`); `ui-tests` ended `1 passed, 2 failed` in the last run.
+**CI history:** the first five runs on `main` (26 Sep 2026) were red. `llm-evals` stopped at collection because the repo has no `OPENAI_API_KEY` secret (`DeepEvalError: OpenAI API key is empty`), and `ui-tests` ended `1 passed, 2 failed` because the session spec waited for a one-time flash message. Both causes are fixed: the LLM steps now skip with a notice when there is no key, and the spec checks the page itself.
 
 ## Limits
 
-- The CI step runs `test_llm_eval.py`, whose `test_false_green_detectado` asserts the wrong "Medellin" answer with `assert_test`. With a working judge that test fails on purpose, so the gate goes red: it is the demo of the gate blocking, not a suite meant to be green.
+- Without the `OPENAI_API_KEY` secret, CI evaluates no LLM output: a green check then means the UI tests passed and the LLM steps were skipped, as the notice says.
+- Module 3's `skips-balance-check` passes at DeepEval's default threshold (`0.67` vs `0.5`). I leave the threshold as it is: raising it after seeing the score would be tuning to the result.
 - Modules 1–4 and `promptfoo redteam` are run by hand; the workflow only runs `test_llm_eval.py` and `promptfooconfig.yaml`.
 - A red check blocks merges only when `eval-gate` is a required status check; `main` has no branch protection yet.
 - The UI tests target a public demo site (`the-internet.herokuapp.com`), so its behaviour can change under them.

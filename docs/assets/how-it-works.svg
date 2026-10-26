@@ -27,6 +27,7 @@
     <g font-size="13" fill="#ABC0C8">
       <text x="250" y="110">job: ui-tests</text>
       <text x="250" y="280">job: llm-evals</text>
+      <text x="360" y="280" fill="#FFC56E">! no OPENAI_API_KEY secret → both steps skipped with a ::notice::</text>
       <text x="1018" y="160">no</text>
       <text x="1018" y="388">yes</text>
     </g>
@@ -51,7 +52,7 @@
     <text x="268" y="342" font-size="13" font-family="Menlo,Consolas,monospace" fill="#ABC0C8">evals/test_llm_eval.py</text>
     <text x="268" y="366" font-size="14" fill="#F4F7F5">GEval Correctness ≥ 0.7</text>
     <text x="268" y="388" font-size="14" fill="#F4F7F5">AnswerRelevancy ≥ 0.7</text>
-    <text x="268" y="410" font-size="14" fill="#ABC0C8"><tspan fill="#55DFBD">✓</tspan> Bogota  ·  <tspan fill="#FB8176">✗</tspan> Medellin (false green)</text>
+    <text x="268" y="410" font-size="14" fill="#ABC0C8"><tspan fill="#55DFBD">✓</tspan> Bogota  ·  <tspan fill="#FB8176">✗</tspan> Medellin blocked</text>
 
     <rect x="560" y="290" width="270" height="130" rx="12" fill="#0D2638" stroke="#214456"/>
     <text x="578" y="320" font-size="17" font-weight="700" fill="#F4F7F5">Promptfoo eval</text>

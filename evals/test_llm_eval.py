@@ -43,4 +43,5 @@ def test_false_green_detectado():
         actual_output="La capital de Colombia es Medellin.",
         expected_output="Bogota",
     )
-    assert_test(tc, [correctness])
+    correctness.measure(tc)
+    assert correctness.score < correctness.threshold, correctness.reason

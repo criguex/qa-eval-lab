@@ -29,8 +29,9 @@
     <path id="w1" pathLength="1" d="M150 270H168V141H184" stroke="#55DFBD" data-m="url(#a)"/>
     <path id="w2" pathLength="1" d="M150 270H168V294H184" stroke="#55DFBD" data-m="url(#a)"/>
     <path id="w3" pathLength="1" d="M606 141H795V156" stroke="#55DFBD" data-m="url(#a)"/>
-    <path id="w4" pathLength="1" d="M606 294H690V208H730" stroke="#FB8176" data-m="url(#c)"/>
-    <path id="w5" pathLength="1" d="M795 266V300" stroke="#FB8176" data-m="url(#c)"/>
+    <path id="w4" pathLength="1" d="M606 294H690V208H730" stroke="#55DFBD" data-m="url(#a)"/>
+    <path id="w6" pathLength="1" d="M606 447H690V294" stroke="#55DFBD"/>
+    <path id="w5" pathLength="1" d="M795 266V300" stroke="#55DFBD" data-m="url(#a)"/>
   </svg>
 
   <div class="abs card" id="push" style="left:32px;top:232px;width:118px;height:76px;padding:12px 14px">
@@ -58,26 +59,27 @@
     <div class="row" id="r2" style="top:132px">
       <div class="name mono">test_false_green_detectado</div>
       <div class="out">“La capital de Colombia es Medellin.”</div>
-      <div class="verdict"><span class="badge coral" id="v2">✗ FAIL</span></div>
+      <div class="verdict"><span class="badge coral" id="v2">✗ BLOCKED</span></div>
       <div class="track"><div class="fill" id="b2"></div></div>
     </div>
   </div>
-  <div class="abs mono coral" id="exit" style="left:200px;top:402px;font-size:12px">✗ deepeval exits ≠ 0 → the job stops here</div>
+  <div class="abs mono mint" id="exit" style="left:200px;top:402px;font-size:12px">✓ judge blocks the false green → test passes → exit 0</div>
 
   <div class="abs card" id="pf" style="left:186px;top:424px;width:420px;height:46px;padding:12px 14px">
     <span style="font-weight:700;font-size:14px">Promptfoo eval</span>
     <span class="mono muted" style="font-size:11px">&nbsp; gpt-4o-mini · llm-rubric</span>
-    <span class="abs gold" id="skip" style="right:14px;top:13px;font-size:13px;font-weight:700">! skipped</span>
+    <span class="abs mint" id="ran" style="right:14px;top:13px;font-size:13px;font-weight:700">✓ exit 0</span>
   </div>
 
   <div class="diamond" id="dia"></div>
   <div class="gate-label" id="gl">any step<br>exit ≠ 0?</div>
-  <div class="abs mono muted" id="yes" style="left:806px;top:272px;font-size:12px">yes</div>
+  <div class="abs mono muted" id="yes" style="left:806px;top:272px;font-size:12px">no</div>
+  <div class="abs gold" id="nokey" style="left:640px;top:40px;width:290px;font-size:12px;line-height:1.35">! No OPENAI_API_KEY secret: both LLM steps are skipped and the job prints a ::notice::</div>
 
-  <div class="abs card" id="verdict" style="left:660px;top:304px;width:270px;height:120px;padding:14px 16px;border-color:var(--coral)">
-    <div style="font-family:'Archivo Black';font-size:28px;color:var(--coral)">✗ FAIL</div>
-    <div style="font-size:14px;margin-top:4px">eval-gate check is red</div>
-    <div class="muted" style="font-size:12px;margin-top:4px;line-height:1.35">A fluent but wrong answer stops the pipeline. It blocks the merge when the check is required.</div>
+  <div class="abs card" id="verdict" style="left:704px;top:300px;width:232px;height:136px;padding:14px 16px;border-color:var(--mint)">
+    <div style="font-family:'Archivo Black';font-size:28px;color:var(--mint)">✓ PASS</div>
+    <div style="font-size:14px;margin-top:4px">eval-gate check is green</div>
+    <div class="muted" style="font-size:12px;margin-top:4px;line-height:1.35"><span class="coral">✗</span> Red when the judge lets “Medellin” through or a UI spec fails.</div>
   </div>
 
   <div class="caption" id="cap">Illustration of the workflow logic with the two cases in evals/test_llm_eval.py. The verdicts are the ones the cases are designed to get; the judge was not run here (it needs OPENAI_API_KEY).</div>
@@ -106,14 +108,16 @@ window.render = (t) => {
   fade('v2', t, 6.6, 0.3);
   $('r2').style.boxShadow = t >= 6.6 ? `0 0 0 ${2 * p(t, 6.6, 6.9)}px var(--coral)` : 'none';
   fade('exit', t, 7.1, 0.4);
-  fade('skip', t, 7.6, 0.4);
-  $('pf').style.opacity = t >= 7.6 ? 1 - 0.45 * p(t, 7.6, 8.0) : $('pf').style.opacity;
+  fade('ran', t, 7.8, 0.4);
+  $('uiState').textContent = t >= 4.0 ? '✓ exit 0' : 'exit code → gate';
+  $('uiState').style.color = t >= 4.0 ? 'var(--mint)' : 'var(--muted)';
+  draw('w6', t, 8.2, 0.4);
+  fade('nokey', t, 10.0, 0.5);
   fade('cap', t, 1.0, 0.6);
   fade('dia', t, 2.0, 0.4);
   $('dia').style.transform = 'rotate(45deg)';
   fade('gl', t, 2.0, 0.4);
   draw('w4', t, 8.0, 0.6);
-  $('dia').style.borderColor = t >= 8.6 ? 'var(--coral)' : 'var(--mint)';
   fade('yes', t, 8.7, 0.3);
   draw('w5', t, 8.8, 0.4);
   fade('verdict', t, 9.2, 0.5);
